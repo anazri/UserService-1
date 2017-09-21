@@ -28,16 +28,27 @@ public class UserService {
         return users;
     }
 
-    public User getUser(int Id) {
-        User user = userRepository.findOne(Id);
-        if(user == null) throw new ResourceNotFoundException("user with id : "+Id+" does not exists");
-        return user;
-    }
-
-    public User getUserByEmail(String emailId){
-        User user =  userRepository.findByEmailId(emailId);
-        if(user == null) {throw new ResourceNotFoundException("user with Email Id : "+emailId+" does not exists");}
-        return user;
+    public List<User> getUserByField(String findBy, String val){
+        switch (findBy){
+            case "emailId":
+                return userRepository.findByEmailId(val);
+            case "id":
+                int Id;
+                try {
+                    Id = Integer.parseInt(val);
+                }catch (Exception Error){
+                    throw new InvalidDataException("Invalid Data found. Reason : "+Error);
+                }
+                return userRepository.findById(Id);
+            case "phoneNumber":
+                return userRepository.findByPhoneNumber(val);
+            case "userName":
+                return userRepository.findByUserName(val);
+            case "userType":
+                return userRepository.findByUserType(val);
+            default:
+                throw new InvalidDataException("Invalid Id or parameters in URL");
+        }
     }
 
     public void addUser(OpenUser user) {
@@ -93,7 +104,7 @@ public class UserService {
 
         User user = userRepository.findOne(Id);
 
-        if(user.getId()!=activeId){
+        if(user==null || user.getId()!=activeId){
             throw new UnAuthorizedAccessException("You are not authorized to delete this account.");
         }
 
@@ -110,9 +121,14 @@ public class UserService {
         password = user.getPassword();
         userType = user.getUserType();
 
-        User dbUser = userRepository.findByEmailId(emailId);
+        List<User> dbUser = userRepository.findByEmailId(emailId);
 
-        if(dbUser!=null){
+        User testUser=null;
+        if(dbUser.size()>0){
+            testUser = dbUser.get(0);
+        }
+
+        if(testUser!=null){
             throw new InvalidDataException("Email id is already registered!");
         }else if(isNullOrEmpty(phoneNumber) || isNullOrEmpty(userName) || isNullOrEmpty(emailId) || isNullOrEmpty(password) || isNullOrEmpty(userType)){
             throw new InvalidDataException("All fields are required");
@@ -140,6 +156,10 @@ public class UserService {
         newUser.setPassword(user.getPassword());
         newUser.setEmailId(user.getEmailId());
         newUser.setUserType(user.getUserType());
+
+        if(user.getId()!=null){
+            newUser.setId(user.getId());
+        }
 
         return newUser;
     }

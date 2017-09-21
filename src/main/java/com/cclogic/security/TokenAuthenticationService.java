@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import static java.util.Collections.emptyList;
 
@@ -50,9 +51,14 @@ public class TokenAuthenticationService {
 
         System.out.println("UserName at addAuthentication : " + username);
 
+        User user;
+        List<User> users = instance.getUserByField("emailId",username);
 
-        User user = instance.getUserByEmail(username);
-
+        if(users.size()>0){
+            user = users.get(0);
+        }else{
+            throw new ResourceNotFoundException("User not found. Try to login again");
+        }
 
         if (user == null) {
             throw new ResourceNotFoundException("An unexpected exception. Try to login again");

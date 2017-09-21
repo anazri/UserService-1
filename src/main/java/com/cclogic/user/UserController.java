@@ -22,7 +22,7 @@ public class UserController {
     @RequestMapping("/test")
     public String test(@RequestHeader HttpHeaders headers) {
         UserHeaderTokenData userHeaderTokenData = TokenAuthenticationService.getUserData(headers.getFirst(HEADER_STRING));
-        System.out.println("Active Id : "+userHeaderTokenData.getId());
+        System.out.println("Active Id : " + userHeaderTokenData.getId());
         return new CustomResponse("Test Successful!").getResponse();
     }
 
@@ -31,34 +31,33 @@ public class UserController {
         return userService.getUsers();
     }
 
-    @RequestMapping(value = "/users/{Id}", method = RequestMethod.GET)
-    public User getUser(@PathVariable int Id) {
-        return userService.getUser(Id);
-    }
-
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     public String addUser(@RequestBody OpenUser openUser) {
         userService.addUser(openUser);
         return new CustomResponse("user Registered Successfully!").getResponse();
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/users/{Id}")
-    public String updateUser(@RequestBody OpenUser openUser, @PathVariable int Id, @RequestHeader HttpHeaders headers) {
+    @RequestMapping(method = RequestMethod.PUT, value = "/users")
+    public String updateUser(@RequestBody OpenUser openUser,
+                             @RequestParam(value = "id", required = true) int Id,
+                             @RequestHeader HttpHeaders headers) {
         UserHeaderTokenData userHeaderTokenData = TokenAuthenticationService.getUserData(headers.getFirst(HEADER_STRING));
         userService.updateUser(openUser, userHeaderTokenData.getId(), Id);
         return new CustomResponse("user updated successfully!").getResponse();
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/users/{Id}")
-    public String deleteUser(@PathVariable int Id, @RequestHeader HttpHeaders headers) {
+    @RequestMapping(method = RequestMethod.DELETE, value = "/users")
+    public String deleteUser(@RequestParam(value = "id", required = true) int Id,
+                             @RequestHeader HttpHeaders headers) {
         UserHeaderTokenData userHeaderTokenData = TokenAuthenticationService.getUserData(headers.getFirst(HEADER_STRING));
         userService.deleteUser(Id, userHeaderTokenData.getId());
         return new CustomResponse("user deleted successfully!").getResponse();
     }
 
-    @RequestMapping("/user/getUserByEmail/{emailId:.+}")
-    public User getUserByEmail(@PathVariable String emailId) {
-        return userService.getUserByEmail(emailId);
+    @RequestMapping(value = "/users/search", method = RequestMethod.GET)
+    public List<User> getUsersByField(@RequestParam(value = "by", required = true) String field,
+                                      @RequestParam(value = "val", required = true) String emailId) {
+        return userService.getUserByField(field, emailId);
     }
 
 }
