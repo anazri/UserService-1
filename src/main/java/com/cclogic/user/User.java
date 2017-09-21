@@ -1,6 +1,7 @@
 package com.cclogic.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.annotations.VisibleForTesting;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,4 +28,13 @@ public class User {
     @JsonIgnore
     private String password;
     private String userType;
+
+    @VisibleForTesting
+    public User(String phoneNumber, String userName, String emailId, String password, String userType){
+        this.phoneNumber = phoneNumber;
+        this.userName = userName;
+        this.emailId = emailId;
+        this.password = password;
+        this.userType = userType;
+    }
 }
