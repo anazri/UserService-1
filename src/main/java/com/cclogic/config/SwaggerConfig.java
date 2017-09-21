@@ -10,6 +10,8 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import static springfox.documentation.builders.PathSelectors.regex;
+
 /**
  * Created by Nishant on 9/19/2017.
  */
@@ -20,13 +22,10 @@ public class SwaggerConfig {
     @Bean
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("user")
-                .apiInfo(metaData())
                 .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
-                .build()
-                .pathMapping("/");
+                .apis(RequestHandlerSelectors.basePackage("com.cclogic"))
+                .paths(regex("/user.*"))
+                .build();
     }
 
     private ApiInfo metaData() {

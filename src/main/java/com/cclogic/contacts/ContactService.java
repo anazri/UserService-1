@@ -21,13 +21,13 @@ public class ContactService {
 
     private static final String DOMAIN = "http://192.168.3.58:8080";
     private static final String CREATE_CONTACT_URL = DOMAIN + "/user/addContact";
-    private static final String GET_CONTACTS_URL = DOMAIN + "/user/contacts";
-    private static final String CONTACTS_API_TEST_URL = DOMAIN + "/test/contact";
+    private static final String GET_CONTACTS_URL = DOMAIN + "/user/Contacts";
+    private static final String CONTACTS_API_TEST_URL = DOMAIN + "/test/Contact";
 
 
-    public String testContactsAPI(){
+    public String testContactsAPI() {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity(CONTACTS_API_TEST_URL,String.class);
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(CONTACTS_API_TEST_URL, String.class);
 
         HttpStatus statusCode = responseEntity.getStatusCode();
 
@@ -53,18 +53,18 @@ public class ContactService {
             throw new UnAuthorizedAccessException("Cannot add contact to other's Id. Please use your own Id");
         }
 
-        HashMap<String,String> map = new HashMap<>();
+        HashMap<String, String> map = new HashMap<>();
         map.put("name", contact.getName());
         map.put("phoneNumber", contact.getPhoneNumber());
 
         Gson gson = new Gson();
         String jsonData = gson.toJson(map);
 
-        HttpEntity<?> entity = new HttpEntity<>(jsonData ,headers);
+        HttpEntity<?> entity = new HttpEntity<>(jsonData, headers);
 
         RestTemplate restTemplate = new RestTemplate();
 
-        System.out.println("Headers : "+headers);
+        System.out.println("Headers : " + headers);
 
         ResponseEntity<String> responseEntity = restTemplate.exchange(CREATE_CONTACT_URL, HttpMethod.POST, entity, String.class);
 
@@ -82,11 +82,14 @@ public class ContactService {
         }
     }
 
-    public String getContacts(HttpHeaders headers){
+    public String getContacts(HttpHeaders headers) {
         RestTemplate restTemplate = new RestTemplate();
 
-        HttpEntity<String> entity = new HttpEntity<String>("parameters",headers);
+
+        HttpEntity<?> entity = new HttpEntity<>("", headers);
+
         ResponseEntity<String> response = restTemplate.exchange(GET_CONTACTS_URL, HttpMethod.GET, entity, String.class);
+
 
         HttpStatus statusCode = response.getStatusCode();
         String result;

@@ -36,8 +36,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.POST,"/users").permitAll()
                 .antMatchers("/v2/api-docs").permitAll()
-                .antMatchers("/swagger-ui.html").permitAll()
-                .antMatchers("/springfox/swagger-ui.html").permitAll()
+                /*.antMatchers("/swagger-ui.html").permitAll()*/
+                .antMatchers("/swagger**").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/springfox/**").permitAll()
                 .antMatchers("/test").permitAll()
                 .antMatchers("/users/contacts/test").permitAll()
                 .anyRequest().authenticated()
