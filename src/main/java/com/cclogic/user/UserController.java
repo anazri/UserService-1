@@ -54,7 +54,7 @@ public class UserController {
         return new CustomResponse("user deleted successfully!").getResponse();
     }
 
-    @RequestMapping(value = "/users/search", method = RequestMethod.GET)
+    @RequestMapping(value = "/users", method = RequestMethod.GET, params ={"by", "val"} )
     public List<User> getUsersByField(@RequestParam(value = "by", required = true) String field,
                                       @RequestParam(value = "val", required = true) String emailId) {
         return userService.getUserByField(field, emailId);

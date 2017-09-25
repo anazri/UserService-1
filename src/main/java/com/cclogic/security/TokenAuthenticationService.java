@@ -32,6 +32,7 @@ import static java.util.Collections.emptyList;
 @Component
 public class TokenAuthenticationService {
     static final long EXPIRATION_TIME = 864_000_000; // 10 days
+    /*static final long EXPIRATION_TIME = 300_000; // 5 minutes*/
     static final String SECRET = "ThisIsASecret";
     public static final String HEADER_STRING = "Authorization";
 
@@ -80,7 +81,6 @@ public class TokenAuthenticationService {
         res.addHeader(HEADER_STRING, JWT);
 
         HashMap<String, String> responseData = new HashMap<>();
-        responseData.put("status", "" + HttpStatus.ACCEPTED);
         responseData.put("message", "Login Successful");
 
 
